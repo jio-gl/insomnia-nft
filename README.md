@@ -77,4 +77,4 @@ The contract is designed with **security in mind**, addressing:
 
 ## License
 
-This project is licensed under the [MIT License](./LICENSE). Feel free to use it as a reference or baseline for your own projects.
+This project is licensed under the [MIT License](./LICENSE.md). Feel free to use it as a reference or baseline for your own projects.
