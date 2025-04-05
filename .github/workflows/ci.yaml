@@ -20,6 +20,11 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
+      - name: "Install OpenZeppelin and Sablier libraries"
+        run: |
+          forge install OpenZeppelin/openzeppelin-contracts
+          forge install sablier-labs/sablier
+
       - name: "Build the contracts and print their size"
         run: "forge build --sizes"
 
