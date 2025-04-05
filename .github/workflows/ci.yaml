@@ -15,18 +15,20 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@v4
 
       - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1"
+        uses: foundry-rs/foundry-toolchain@v1
 
-      - name: "Install OpenZeppelin and Sablier libraries"
+      - name: "Configure Git and Install Libraries"
         run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions"
           forge install OpenZeppelin/openzeppelin-contracts
           forge install sablier-labs/sablier
 
       - name: "Build the contracts and print their size"
-        run: "forge build --sizes"
+        run: forge build --sizes
 
       - name: "Add build summary"
         run: |
@@ -38,20 +40,20 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@v4
 
       - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1"
+        uses: foundry-rs/foundry-toolchain@v1
 
       - name: "Show the Foundry config"
-        run: "forge config"
+        run: forge config
 
       - name: "Generate a fuzz seed that changes weekly"
         run: |
           echo "FOUNDRY_FUZZ_SEED=$(( $EPOCHSECONDS - $EPOCHSECONDS % 604800 ))" >> $GITHUB_ENV
 
       - name: "Run the tests"
-        run: "forge test"
+        run: forge test
 
       - name: "Add test summary"
         run: |
