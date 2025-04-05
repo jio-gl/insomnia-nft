@@ -17,13 +17,18 @@ jobs:
       - name: "Check out the repo"
         uses: actions/checkout@v4
 
+      - name: "Configure Git"
+        run: |
+          # Prevent "Author identity unknown" errors when forge installs submodules.
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions"
+
       - name: "Install Foundry"
         uses: foundry-rs/foundry-toolchain@v1
 
-      - name: "Configure Git and Install Libraries"
+      - name: "Install Libraries"
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "github-actions"
+          forge install foundry-rs/forge-std
           forge install OpenZeppelin/openzeppelin-contracts
           forge install sablier-labs/sablier
 
@@ -42,8 +47,20 @@ jobs:
       - name: "Check out the repo"
         uses: actions/checkout@v4
 
+      - name: "Configure Git"
+        run: |
+          # Same reason, especially if you re-install in the test job
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions"
+
       - name: "Install Foundry"
         uses: foundry-rs/foundry-toolchain@v1
+
+      - name: "Install Libraries"
+        run: |
+          forge install foundry-rs/forge-std
+          forge install OpenZeppelin/openzeppelin-contracts
+          forge install sablier-labs/sablier
 
       - name: "Show the Foundry config"
         run: forge config
@@ -52,8 +69,10 @@ jobs:
         run: |
           echo "FOUNDRY_FUZZ_SEED=$(( $EPOCHSECONDS - $EPOCHSECONDS % 604800 ))" >> $GITHUB_ENV
 
-      - name: "Run the tests"
-        run: forge test
+      - name: "Run the tests (only test files, skip scripts)"
+        run: |
+          # --match-path 'test/**/*.sol' ensures we only compile/test what's in `test/` directory.
+          forge test --match-path "test/**/*.sol"
 
       - name: "Add test summary"
         run: |
